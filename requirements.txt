@@ -1,0 +1,3 @@
+requests
+finnhub-python
+python-dotenv
