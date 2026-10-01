@@ -1,0 +1,27 @@
+name: sberdat #tady pomahalo ai
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 20 * * *"
+
+jobs:
+  sber:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python main.py
+        env:
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add datasoc.csv
+          git commit -m "sber dat" || echo "nic noveho"
+          git pull --rebase
+          git push
